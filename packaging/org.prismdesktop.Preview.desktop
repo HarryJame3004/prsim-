@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Prism Desktop Preview
+Comment=Experimental Midnight Glass desktop preview
+Exec=prism-preview
+Icon=preferences-desktop-theme
+Terminal=false
+Categories=Development;

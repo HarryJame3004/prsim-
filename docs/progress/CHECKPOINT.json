@@ -1,0 +1,10 @@
+{
+  "current_milestone": "M3",
+  "current_task": "Complete network/notification service integration and real service validation; then M4 compositor adapter",
+  "last_successful_gate": "Build, clang-format, qmllint, clang-tidy on seven modules, CTest 9/9, isolated KWin Wayland PreviewTests 4/4, desktop-file validation, CPack TGZ and extracted offscreen smoke",
+  "remaining_tasks": ["M0/M1 visible KDE acceptance gate", "M2 saved developer layouts, blur and GUI validation", "M3 network/notification APIs and real audio/Bluetooth validation", "M4 live compositor adapter and workspace control", "M5 full display profiles and confirmed rollback", "M6 actual shell/session packaging and login validation", "M7 long-duration and real-display performance validation"],
+  "active_blockers": ["Direct Wayland/X11 application launch aborts with exit 134 inside sandbox; isolated KWin Wayland works but visible KDE validation remains unavailable", "No validated live compositor window/display adapter", "No independent shell protocol/lifecycle, so no safe SDDM entry", "Git metadata is read-only; git add -A failed creating .git/index.lock"],
+  "build_directory": "build",
+  "test_commands": ["cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON", "cmake --build build --parallel 2", "ctest --test-dir build --output-on-failure", "qmllint qml/*.qml", "clang-format --dry-run --Werror src/app/*.cpp src/core/*.cpp src/core/*.h src/system/*.cpp src/system/*.h src/window/*.cpp src/window/*.h src/displays/*.cpp src/displays/*.h tests/*.cpp", "clang-tidy -p build -checks='clang-analyzer-*,bugprone-*' --removed-arg=-mno-direct-extern-access --quiet <changed-cpp>", "cpack -G TGZ --config build/CPackConfig.cmake -B build/package"],
+  "safe_continuation": "Read STATUS.md and milestone reports; inspect git status. Resume M3 service APIs and M4 compositor adapter with isolated KWin tests. Changes are uncommitted because .git is read-only; commit only when permissions allow. Do not present the preview as a login session or infer live KDE success from offscreen/nested tests."
+}

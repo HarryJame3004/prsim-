@@ -1,0 +1,13 @@
+# M3 — System Integration
+
+Status: **IN PROGRESS**. Current task: extend service coverage. Updated: 2026-10-11.
+
+Files changed: `CMakeLists.txt`, `src/system/SystemStatus.*`, `src/system/AudioService.*`, `src/system/BluetoothService.*`, `src/app/preview_main.cpp`, `qml/PreviewWindow.qml`, `qml/TopBar.qml`, `qml/GlassActionButton.qml`, `tests/SystemStatusTests.cpp`, `tests/AudioServiceTests.cpp`, `tests/BluetoothServiceTests.cpp`, `tests/PreviewTests.cpp`.
+
+Implemented: asynchronous, five-second Linux probe for CPU utilization, memory utilization, battery capacity/charging and active network interface; injectable `ISystemProbe`; Control Center panel with explicit unavailable values. `AudioService` uses nonblocking `pactl` commands to read default-sink volume/mute and apply bounded volume/mute changes. `BluetoothService` uses a nonblocking `bluetoothctl show` query for default controller power state. Both have three-second command timeouts and report unavailable states. The preview does not own Plasma services or a notification server.
+
+Verified: CMake build, format, QML lint and CTest 9/9 pass. Fake probe test verifies asynchronous property updates; Linux probe test verifies CPU, memory and battery ranges. Audio tests use a fake executable to verify query, bounded control, missing executable and a hung-command timeout. Bluetooth tests use a fake executable to verify parsing and missing-service behavior. Control Center was captured and visually inspected offscreen: [image](images/control-center-offscreen.png). Preview tests pass 4/4 in an isolated KWin Wayland compositor. `clang-tidy` with `clang-analyzer-*` and `bugprone-*` passed for seven current C++ module sources after explicitly removing a GCC-only compiler flag. No visible KDE test. The build initially emitted a `nodiscard` warning in the test; test now checks the initial CPU sample and the warning is gone.
+
+Limitations: active interface does not prove Internet reachability. CPU/RAM and battery use `/proc` and sysfs; there is no UPower or NetworkManager D-Bus integration. Audio and Bluetooth use supported command-line clients, not direct service APIs; actual user-session control was not available to validate. Notification integration remains unimplemented. The first `clang-tidy` invocation failed because its default check set was empty and the GCC `-mno-direct-extern-access` flag was unsupported; explicit checks and removal of that flag allowed analysis. It identified narrowing conversions, which were fixed. No Git commit yet; prior reference `004b17d`.
+
+Next autonomous action: add service-backed network/notification integration with fakes and validate audio/Bluetooth in a session where their services are available.
